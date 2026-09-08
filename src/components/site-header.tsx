@@ -10,7 +10,7 @@ export function SiteHeader({ isAdmin = false }: { isAdmin?: boolean }) {
   const logout = useServerFn(adminLogout);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-40">
+    <header className="absolute inset-x-0 top-0 z-40" data-sister-shops="hidden">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:h-[4.25rem] sm:px-6">
         <Link to="/" className="flex min-w-0 items-center gap-3">
           <img
