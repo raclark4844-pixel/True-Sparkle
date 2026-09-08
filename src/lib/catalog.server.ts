@@ -88,22 +88,32 @@ async function seedIfEmpty() {
 }
 
 export async function listCatalogItems(): Promise<Product[]> {
-  await seedIfEmpty();
-  const sql = await getSql();
-  const rows = await sql.query<Row>(
-    "select * from catalog_items order by sort_order asc, name asc",
-  );
-  return rows.map(fromRow);
+  try {
+    await seedIfEmpty();
+    const sql = await getSql();
+    const rows = await sql.query<Row>(
+      "select * from catalog_items order by sort_order asc, name asc",
+    );
+    return rows.length ? rows.map(fromRow) : PRODUCTS;
+  } catch (err) {
+    console.error("[catalog] using static kits (database unavailable)", err);
+    return PRODUCTS;
+  }
 }
 
 export async function getCatalogItem(id: string): Promise<Product | null> {
-  await seedIfEmpty();
-  const sql = await getSql();
-  const rows = await sql.query<Row>(
-    "select * from catalog_items where id = $1",
-    [id],
-  );
-  return rows[0] ? fromRow(rows[0]) : null;
+  try {
+    await seedIfEmpty();
+    const sql = await getSql();
+    const rows = await sql.query<Row>(
+      "select * from catalog_items where id = $1",
+      [id],
+    );
+    if (rows[0]) return fromRow(rows[0]);
+  } catch (err) {
+    console.error("[catalog] using static kit (database unavailable)", err);
+  }
+  return PRODUCTS.find((p) => p.id === id) ?? null;
 }
 
 export async function upsertCatalogItem(input: {

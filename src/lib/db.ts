@@ -1,3 +1,4 @@
+import { mkdirSync } from "node:fs";
 import { pendingMigrations } from "../../scripts/migration-plan.mjs";
 
 /** Which database backend is active. */
@@ -17,6 +18,26 @@ const databaseUrl =
  * included. Swap in Neon later by just setting `DATABASE_URL`; no code changes.
  */
 export const dbSource: DbSource = databaseUrl ? "neon" : "pglite";
+
+/**
+ * Vercel / AWS Lambda only allow writes under `/tmp`. Preview (grok.me) and
+ * local `vite dev` have a normal FS, so they keep the in-memory PGLite
+ * instance — do not point those at `/tmp`.
+ */
+function serverlessReadonlyRoot() {
+  return Boolean(
+    process.env.VERCEL ||
+      process.env.AWS_LAMBDA_FUNCTION_NAME ||
+      process.env.LAMBDA_TASK_ROOT,
+  );
+}
+
+function pgliteDataDir(): string | undefined {
+  if (!serverlessReadonlyRoot()) return undefined;
+  const dir = "/tmp/true-sparkle-pglite";
+  mkdirSync(dir, { recursive: true });
+  return dir;
+}
 
 /**
  * Minimal shared SQL surface, satisfied by both Neon and PGLite. Both the
@@ -111,13 +132,17 @@ async function createPgliteSql(): Promise<Sql> {
   // data survives source edits (it resets on dev-server restart).
   globalRef.__pgliteInstance__ ??= (async () => {
     const { PGlite } = await import("@electric-sql/pglite");
-    const pg = new PGlite({
+    const dataDir = pgliteDataDir();
+    const options = {
       parsers: {
         [OID_INT8]: Number,
         [OID_DATE]: identity,
         [OID_INTERVAL]: identity,
       },
-    });
+    };
+    // Serverless: persist under /tmp (the only writable path). Preview/dev:
+    // omit dataDir so PGLite stays in-memory like before.
+    const pg = dataDir ? new PGlite(dataDir, options) : new PGlite(options);
     await pg.waitReady;
     await pg.exec(
       "create table if not exists _migrations (name text primary key, applied_at timestamptz not null default now())",
@@ -229,7 +254,7 @@ export function ensureDbReady(): Promise<void> {
 const globalBoot = globalThis as typeof globalThis & {
   __pgBootstrapPromise__?: Promise<void>;
 };
-if (typeof window === "undefined" && dbSource === "pglite") {
+if (typeof window === "undefined" && dbSource === "pglite" && !serverlessReadonlyRoot()) {
   globalBoot.__pgBootstrapPromise__ ??= ensureDbReady().catch((err) => {
     globalBoot.__pgBootstrapPromise__ = undefined;
     console.error("[db] PGLite bootstrap failed:", err);

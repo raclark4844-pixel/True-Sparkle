@@ -37,21 +37,34 @@ export const adminLogout = createServerFn({ method: "POST" }).handler(
 
 export const loadShop = createServerFn({ method: "GET" }).handler(async () => {
   const { isAdminRequest } = await import("@/lib/admin.server");
-  const { listCatalogItems } = await import("@/lib/catalog.server");
-  const products = await listCatalogItems();
-  return { products, isAdmin: isAdminRequest() };
+  try {
+    const { listCatalogItems } = await import("@/lib/catalog.server");
+    const products = await listCatalogItems();
+    return { products, isAdmin: isAdminRequest() };
+  } catch (err) {
+    console.error("[shop] falling back to static catalog", err);
+    const { PRODUCTS } = await import("@/lib/products");
+    return { products: PRODUCTS, isAdmin: isAdminRequest() };
+  }
 });
 
 export const loadShopItem = createServerFn({ method: "GET" })
   .validator((data: { id: string }) => data)
   .handler(async ({ data }) => {
     const { isAdminRequest } = await import("@/lib/admin.server");
-    const { getCatalogItem, listCatalogItems } = await import(
-      "@/lib/catalog.server"
-    );
-    const product = await getCatalogItem(data.id);
-    const products = product ? await listCatalogItems() : [];
-    return { product, products, isAdmin: isAdminRequest() };
+    try {
+      const { getCatalogItem, listCatalogItems } = await import(
+        "@/lib/catalog.server"
+      );
+      const product = await getCatalogItem(data.id);
+      const products = product ? await listCatalogItems() : [];
+      return { product, products, isAdmin: isAdminRequest() };
+    } catch (err) {
+      console.error("[shop] falling back to static kit", err);
+      const { PRODUCTS } = await import("@/lib/products");
+      const product = PRODUCTS.find((p) => p.id === data.id) ?? null;
+      return { product, products: PRODUCTS, isAdmin: isAdminRequest() };
+    }
   });
 
 export type OptionInput = { id?: string; label: string; price: number };
