@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+.vercel
+.tanstack
+.output
+dist
+*.log
+.project_id
+.node_modules.lock
