@@ -2,7 +2,6 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { ShoppingBag } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { STORE_URL } from "@/lib/products";
-import { ShopLinks } from "@/components/shop-links";
 import { Button } from "@/components/ui/button";
 import { adminLogout } from "@/lib/catalog-fns";
 
@@ -24,8 +23,6 @@ export function SiteHeader({ isAdmin = false }: { isAdmin?: boolean }) {
           </span>
         </Link>
         <div className="flex min-w-0 shrink-0 items-center gap-1 sm:gap-2">
-          <ShopLinks size="xs" className="sm:hidden" />
-          <ShopLinks size="sm" className="hidden sm:flex" />
           {isAdmin ? (
             <Button
               type="button"

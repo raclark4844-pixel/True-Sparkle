@@ -14,12 +14,3 @@ export const LIVE_SHOPS = [
     href: "https://winter-lark-trail-plum.grok.me",
   },
 ] as const;
-  {
-    name: "KayzCharmzz",
-    href: "https://kayzcharmzz.grok.me/",
-  },
-  {
-    name: "IK's Charms",
-    href: "https://winter-lark-trail-plum.grok.me",
-  },
-] as const;

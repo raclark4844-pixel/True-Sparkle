@@ -1,7 +1,6 @@
 import { STORE_URL } from "@/lib/products";
-import { SHOW_SISTER_SHOPS, STUDIO_LOCATION } from "@/lib/studio";
+import { STUDIO_LOCATION } from "@/lib/studio";
 import { SocialLinks } from "@/components/social-links";
-import { ShopLinks } from "@/components/shop-links";
 
 export function SiteFooter() {
   return (
@@ -14,14 +13,6 @@ export function SiteFooter() {
             still lives on the current store until the new shop is ready.
           </p>
           <p className="mt-2">{STUDIO_LOCATION}</p>
-          {SHOW_SISTER_SHOPS ? (
-            <>
-              <p className="mt-4 text-xs uppercase tracking-[0.16em] text-champagne">
-                Live shops
-              </p>
-              <ShopLinks className="mt-2" />
-            </>
-          ) : null}
           <SocialLinks className="mt-3 -ml-1" />
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2">
