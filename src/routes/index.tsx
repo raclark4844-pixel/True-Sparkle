@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Catalog } from "@/components/catalog";
 import { CraftPrimer } from "@/components/craft-primer";
 import { KitDetail } from "@/components/kit-detail";
-import { ProductCard } from "@/components/product-card";
 import { PRODUCTS, STORE_URL } from "@/lib/products";
 import { loadShop } from "@/lib/catalog-fns";
 import { Button, CtaGroup } from "@/components/ui/button";
@@ -30,8 +29,6 @@ function Home() {
       <KitDetail product={selected} catalog={products} isAdmin={shop.isAdmin} />
     );
   }
-
-  const featured = products.filter((p) => p.featured);
 
   return (
     <main>
@@ -94,22 +91,6 @@ function Home() {
           sparkle · Round or square drills · Beginner friendly
         </p>
       </div>
-
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <h2 className="font-display text-5xl leading-none">Featured kits</h2>
-            <Button asChild variant="ghost" className="hidden sm:inline-flex">
-              <a href="#shop">View all</a>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </div>
-      </section>
 
       <Catalog products={products} isAdmin={shop.isAdmin} />
 
