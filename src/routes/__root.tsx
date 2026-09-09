@@ -48,7 +48,9 @@ function RootComponent() {
         <HeadContent />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(studioJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(studioJsonLd).replace(/</g, "\\u003c"),
+          }}
         />
       </head>
       <body className="min-h-dvh bg-bg text-fg antialiased pb-[calc(3.5rem+env(safe-area-inset-bottom))]">

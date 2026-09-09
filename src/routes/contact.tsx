@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SocialLinks } from "@/components/social-links";
+import { sendContactMail } from "@/lib/custom-art-mail";
 import {
   STUDIO_CONTACT,
   STUDIO_EMAIL,
@@ -32,8 +33,9 @@ const areaClass =
 function ContactPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     const data = new FormData(e.currentTarget);
@@ -68,8 +70,17 @@ function ContactPage() {
       .filter(Boolean)
       .join("\n");
 
-    window.location.href = `mailto:${STUDIO_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    setPending(true);
+    try {
+      await sendContactMail({ name, email, phone, topic, order, message });
+      setSent(true);
+      e.currentTarget.reset();
+    } catch {
+      window.location.href = `mailto:${STUDIO_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      setSent(true);
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -206,13 +217,13 @@ function ContactPage() {
           ) : null}
           {sent ? (
             <p className="mt-4 text-sm text-champagne">
-              Your email app should open with the message ready. If nothing
-              opens, send it directly to {STUDIO_EMAIL}.
+              Message sent to {STUDIO_CONTACT}. If nothing arrives, email{" "}
+              {STUDIO_EMAIL} directly.
             </p>
           ) : null}
 
-          <Button type="submit" className="mt-6 max-sm:w-full">
-            Send message
+          <Button type="submit" className="mt-6 max-sm:w-full" disabled={pending}>
+            {pending ? "Sending…" : "Send message"}
           </Button>
         </form>
       </div>

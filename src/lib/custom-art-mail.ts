@@ -67,3 +67,54 @@ export async function sendStudioMail(input: {
   }
   return payload.success || "Photos sent to the studio.";
 }
+
+export async function sendContactMail(input: {
+  name: string;
+  email: string;
+  phone?: string;
+  topic?: string;
+  order?: string;
+  message: string;
+}) {
+  const outbound = new FormData();
+  outbound.set(
+    "_subject",
+    input.topic
+      ? `True Sparkle — ${input.topic} from ${input.name}`
+      : `True Sparkle message from ${input.name}`,
+  );
+  outbound.set("_template", "box");
+  outbound.set("_captcha", "false");
+  outbound.set("Name", input.name);
+  outbound.set("Email", input.email);
+  if (input.phone) outbound.set("Phone", input.phone);
+  if (input.topic) outbound.set("Topic", input.topic);
+  if (input.order) outbound.set("Order / kit", input.order);
+  outbound.set(
+    "message",
+    [
+      `Contact for ${STUDIO_EMAIL}`,
+      `Name: ${input.name}`,
+      `Email: ${input.email}`,
+      input.phone ? `Phone: ${input.phone}` : null,
+      input.topic ? `Topic: ${input.topic}` : null,
+      input.order ? `Order / kit: ${input.order}` : null,
+      "",
+      input.message,
+    ]
+      .filter(Boolean)
+      .join("\n"),
+  );
+  const res = await fetch(FORMSUBMIT_URL, {
+    method: "POST",
+    body: outbound,
+    headers: { Accept: "application/json" },
+  });
+  const payload = (await res.json().catch(() => ({}))) as {
+    success?: string;
+    message?: string;
+  };
+  if (!res.ok) {
+    throw new Error(payload.message || "Mail service rejected the request.");
+  }
+}

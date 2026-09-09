@@ -22,11 +22,19 @@ export const studioJsonLd = {
     "Original diamond painting kits from a Black-owned, woman-led family studio in Cleveland, Ohio. Turn your photos into a kit.",
   email: STUDIO_EMAIL,
   telephone: STUDIO_PHONE_TEL,
-  employee: {
+  founder: {
     "@type": "Person",
     name: STUDIO_CONTACT,
     email: STUDIO_EMAIL,
-    jobTitle: "Contact",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    name: STUDIO_CONTACT,
+    email: STUDIO_EMAIL,
+    telephone: STUDIO_PHONE_TEL,
+    areaServed: "US",
+    availableLanguage: "English",
   },
   address: {
     "@type": "PostalAddress",
@@ -37,6 +45,6 @@ export const studioJsonLd = {
   sameAs: [SOCIAL_INSTAGRAM, SOCIAL_FACEBOOK, SOCIAL_TIKTOK],
   parentOrganization: {
     "@type": "Organization",
-    name: "IK’s Charms & True Sparkle",
+    name: "IK's Charms & True Sparkle",
   },
 } as const;
