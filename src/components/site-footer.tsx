@@ -34,10 +34,6 @@ export function SiteFooter() {
           <a href={`tel:${STUDIO_PHONE_TEL}`} className="mt-1 block hover:text-fg">
             {STUDIO_PHONE}
           </a>
-          <p className="mt-4 text-xs uppercase tracking-[0.16em] text-champagne">
-            Sister shops
-          </p>
-          <ShopLinks className="mt-2" />
           <SocialLinks className="mt-3 -ml-1" />
         </div>
         <div className="flex flex-col gap-2">
@@ -63,11 +59,15 @@ export function SiteFooter() {
             Contact
           </a>
           <a href={PARENT_URL} className="hover:text-fg">
-            Part of IK’s Charms & True Sparkle
+            Parent studio
           </a>
           <a href={KAYZ_URL} className="hover:text-fg">
-            Handmade gifts at KayzCharmzz
+            KayzCharmzz
           </a>
+          <div className="pt-3">
+            <p className="text-xs uppercase tracking-[0.16em] text-champagne">Sister shops</p>
+            <ShopLinks className="mt-2" />
+          </div>
         </div>
       </div>
       <p className="mt-8 border-t border-line px-4 py-5 text-center text-xs text-muted">
