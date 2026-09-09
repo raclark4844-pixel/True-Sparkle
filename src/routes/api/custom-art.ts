@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { sendStudioMail } from "@/lib/custom-art-mail";
+import { STUDIO_EMAIL } from "@/lib/studio";
 
 const MAX_FILES = 5;
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -61,7 +62,7 @@ export const Route = createFileRoute("/api/custom-art")({
             error: rateLimited
               ? "Mail is busy. Retrying from your device…"
               : message ||
-                "Could not send the photos just now. Try again, or email them to truesprakle@yahoo.com.",
+                `Could not send the photos just now. Try again, or email them to ${STUDIO_EMAIL}.`,
             retryClient: true,
           });
         }
