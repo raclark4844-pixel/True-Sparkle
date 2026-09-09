@@ -1,6 +1,7 @@
 import { useRouterState } from "@tanstack/react-router";
-import { BookOpen, Gem, House, Mail, Store } from "lucide-react";
+import { ArrowUpRight, BookOpen, Gem, House, Mail, Store } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { LIVE_SHOPS, SHOW_SISTER_SHOPS } from "@/lib/studio";
 
 const tabs = [
   { id: "home", href: "/", label: "Home", icon: House },
@@ -13,8 +14,6 @@ const tabs = [
 function useActiveTab() {
   const location = useRouterState({ select: (s) => s.location });
   const path = location.pathname;
-  const hash = (location.hash || "").replace("#", "");
-  const search = location.search as { kit?: string };
 
   if (path.startsWith("/about") || path.startsWith("/how-it-works")) return "about";
   if (path.startsWith("/contact") || path.startsWith("/shipping")) return "contact";
@@ -32,6 +31,21 @@ export function SiteBottomNav() {
       aria-label="Primary"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
     >
+      {SHOW_SISTER_SHOPS ? (
+        <div className="grid grid-cols-2 gap-2 border-b border-line px-3 py-2">
+          {LIVE_SHOPS.map((shop) => (
+            <a
+              key={shop.href}
+              href={shop.href}
+              rel="noopener"
+              className="inline-flex h-9 items-center justify-center gap-1 rounded-full border border-champagne/45 px-2 text-[0.65rem] font-medium uppercase tracking-[0.12em] text-champagne hover:border-champagne hover:text-cream"
+            >
+              <span className="truncate">{shop.name}</span>
+              <ArrowUpRight className="size-3 shrink-0" aria-hidden />
+            </a>
+          ))}
+        </div>
+      ) : null}
       <ul className="mx-auto grid max-w-6xl grid-cols-5">
         {tabs.map((tab) => {
           const Icon = tab.icon;
