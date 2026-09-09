@@ -12,7 +12,6 @@ import {
   STUDIO_PHONE_TEL,
 } from "@/lib/seo";
 import { SocialLinks } from "@/components/social-links";
-import { ShopLinks } from "@/components/shop-links";
 
 export function SiteFooter() {
   return (
@@ -63,15 +62,11 @@ export function SiteFooter() {
             Contact
           </a>
           <a href={PARENT_URL} className="hover:text-fg">
-            Parent studio
+            IK's Charms
           </a>
           <a href={KAYZ_URL} className="hover:text-fg">
             KayzCharmzz
           </a>
-          <div className="pt-3">
-            <p className="text-xs uppercase tracking-[0.16em] text-champagne">Sister shops</p>
-            <ShopLinks className="mt-2" />
-          </div>
         </div>
       </div>
       <p className="mt-8 border-t border-line px-4 py-5 text-center text-xs text-muted">
