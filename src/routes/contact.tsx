@@ -111,9 +111,6 @@ function ContactPage() {
           <p className="mt-4 text-xs uppercase tracking-[0.16em] text-champagne">
             Follow
           </p>
-          <p className="mt-1 text-sm text-muted">
-            Instagram & Facebook @kayzcharmzz · TikTok @mamk40
-          </p>
           <SocialLinks className="mt-1 -ml-1" />
           <p className="mt-6 max-w-sm text-sm text-muted">
             If you already checked out on the live cart, include the order

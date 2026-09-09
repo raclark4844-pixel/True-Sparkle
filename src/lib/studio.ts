@@ -6,7 +6,7 @@ export const STUDIO_LOCATION = "Cleveland, Ohio";
 export const STUDIO_EST = "Est. 2021";
 export const SOCIAL_INSTAGRAM = "https://www.instagram.com/kayzcharmzz";
 export const SOCIAL_FACEBOOK = "https://www.facebook.com/kayzcharmzz";
-export const SOCIAL_TIKTOK = "https://www.tiktok.com/@mamk40";
+export const SOCIAL_TIKTOK = "https://www.tiktok.com/@mamazk40";
 
 /** Sister-shop header/footer buttons are hidden. Set true and restore ShopLinks to unhide. */
 export const SHOW_SISTER_SHOPS = false;
