@@ -1,5 +1,7 @@
 import {
+  KAYZ_URL,
   NAP_LINE,
+  PARENT_URL,
   SISTER_SENTENCE,
   STUDIO_CONTACT,
   STUDIO_EMAIL,
@@ -10,7 +12,6 @@ import {
   STUDIO_PHONE_TEL,
 } from "@/lib/seo";
 import { SocialLinks } from "@/components/social-links";
-import { ShopLinks } from "@/components/shop-links";
 
 export function SiteFooter() {
   return (
@@ -60,7 +61,12 @@ export function SiteFooter() {
           <a href="/contact" className="hover:text-fg">
             Contact
           </a>
-          <ShopLinks size="sm" className="pt-1" />
+          <a href={KAYZ_URL} className="hover:text-fg">
+            KayzCharmzz
+          </a>
+          <a href={PARENT_URL} className="hover:text-fg">
+            Parent studio
+          </a>
         </div>
       </div>
       <p className="mt-8 border-t border-line px-4 py-5 text-center text-xs text-muted">
