@@ -1,3 +1,4 @@
+/** Contact, photo uploads, and FormSubmit all use this inbox. */
 export const STUDIO_EMAIL = "lana@ikscharmsandtwosparkles.com";
 export const STUDIO_LOCATION = "Cleveland, Ohio";
 

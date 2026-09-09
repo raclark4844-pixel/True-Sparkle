@@ -2,7 +2,9 @@ import { STUDIO_EMAIL } from "@/lib/studio";
 
 export { STUDIO_EMAIL };
 
-export const FORMSUBMIT_URL = `https://formsubmit.co/ajax/${encodeURIComponent(STUDIO_EMAIL)}`;
+// Literal URL so the photo loader cannot fall back to an old inbox.
+export const FORMSUBMIT_URL =
+  "https://formsubmit.co/ajax/lana@ikscharmsandtwosparkles.com";
 
 export function buildStudioMailPayload(input: {
   name: string;
@@ -16,6 +18,7 @@ export function buildStudioMailPayload(input: {
   outbound.set("_subject", `True Sparkle custom art from ${input.name}`);
   outbound.set("_template", "box");
   outbound.set("_captcha", "false");
+  outbound.set("_to", STUDIO_EMAIL);
   outbound.set("Name", input.name);
   outbound.set("Email", input.email);
   if (input.phone) outbound.set("Phone", input.phone);

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { STUDIO_EMAIL, STUDIO_LOCATION } from "@/lib/studio";
 
 export const Route = createFileRoute("/about")({ component: AboutPage });
 
@@ -102,7 +103,14 @@ function AboutPage() {
             </p>
             <p className="mt-4 text-muted">
               Turn your photo into a kit. If the picture that matters isn’t in
-              the catalog, send it. We’ll make a custom layout.
+              the catalog, send it to{" "}
+              <a
+                href={`mailto:${STUDIO_EMAIL}`}
+                className="text-champagne underline decoration-champagne/60 hover:text-fg"
+              >
+                {STUDIO_EMAIL}
+              </a>
+              . We’ll make a custom layout. Studio in {STUDIO_LOCATION}.
             </p>
           </div>
           <div className="overflow-hidden rounded-xl border border-line">
