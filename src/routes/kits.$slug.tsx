@@ -53,12 +53,15 @@ export const Route = createFileRoute("/kits/$slug")({
   component: KitsSlugPage,
 });
 
-const moodForTheme: Record<string, Mood | "fun"> = {
+const moodForTheme: Record<string, Mood> = {
   glam: "glam",
   wildlife: "wildlife",
   holiday: "seasonal",
+  seasonal: "seasonal",
   heroes: "heroes",
   beginner: "fun",
+  fun: "fun",
+  tools: "tools",
 };
 
 function KitsSlugPage() {
@@ -87,7 +90,7 @@ function KitsSlugPage() {
             sister shop KayzCharmzz — this catalog is kits only.
           </p>
         </div>
-        <Catalog products={products} isAdmin={loaded.shop.isAdmin} />
+        <Catalog products={products} isAdmin={loaded.shop.isAdmin} activeMood={mood} />
       </main>
     );
   }

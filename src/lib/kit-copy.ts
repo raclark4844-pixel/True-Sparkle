@@ -129,7 +129,16 @@ export const KIT_META: Record<string, KitMeta> = {
   },
 };
 
-export const THEME_SLUGS = new Set(["glam", "wildlife", "holiday", "heroes", "beginner"]);
+export const THEME_SLUGS = new Set([
+  "glam",
+  "wildlife",
+  "holiday",
+  "heroes",
+  "beginner",
+  "fun",
+  "seasonal",
+  "tools",
+]);
 
 export function applyKitMeta<T extends { id: string; name: string; slug?: string; alt?: string; story?: string }>(
   list: T[],

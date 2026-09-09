@@ -3,6 +3,7 @@ import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { MOODS, type Mood, type Product } from "@/lib/products";
 import { STUDIO_EMAIL } from "@/lib/studio";
+import { MOOD_PATH } from "@/lib/seo";
 import { ProductCard } from "./product-card";
 import { Button } from "@/components/ui/button";
 import { ItemEditor } from "@/components/item-editor";
@@ -12,11 +13,12 @@ import { cn } from "@/lib/cn";
 export function Catalog({
   products,
   isAdmin,
+  activeMood = "all",
 }: {
   products: Product[];
   isAdmin: boolean;
+  activeMood?: Mood | "all";
 }) {
-  const [mood, setMood] = useState<Mood | "all">("all");
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Product | "new" | null>(null);
   const router = useRouter();
@@ -25,7 +27,7 @@ export function Catalog({
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
     return products.filter((p) => {
-      if (mood !== "all" && p.mood !== mood) return false;
+      if (activeMood !== "all" && p.mood !== activeMood) return false;
       if (!q) return true;
       return (
         p.name.toLowerCase().includes(q) ||
@@ -33,7 +35,7 @@ export function Catalog({
         p.mood.includes(q)
       );
     });
-  }, [mood, query, products]);
+  }, [activeMood, query, products]);
 
   async function onDelete(product: Product) {
     if (!window.confirm(`Delete ${product.name}?`)) return;
@@ -111,22 +113,25 @@ export function Catalog({
           />
         </div>
 
-        <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
-          {MOODS.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              onClick={() => setMood(m.id)}
-              className={cn(
-                "shrink-0 rounded-[0.75rem] border px-4 text-sm font-medium h-11",
-                mood === m.id
-                  ? "border-primary bg-primary text-white"
-                  : "border-line text-fg hover:border-champagne",
-              )}
-            >
-              {m.label}
-            </button>
-          ))}
+        <div className="mb-8 flex flex-wrap gap-2">
+          {MOODS.map((m) => {
+            const href = MOOD_PATH[m.id] ?? "/kits";
+            const selected = activeMood === m.id;
+            return (
+              <a
+                key={m.id}
+                href={href}
+                className={cn(
+                  "inline-flex h-11 shrink-0 items-center rounded-[0.75rem] border px-4 text-sm font-medium",
+                  selected
+                    ? "border-primary bg-primary text-white"
+                    : "border-line text-fg hover:border-champagne",
+                )}
+              >
+                {m.label}
+              </a>
+            );
+          })}
           <a
             href="/custom"
             className="inline-flex h-11 shrink-0 items-center rounded-[0.75rem] border border-line px-4 text-sm font-medium text-fg hover:border-champagne"

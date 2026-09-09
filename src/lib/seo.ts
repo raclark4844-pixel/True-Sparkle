@@ -34,7 +34,20 @@ export const THEMES = [
   { id: "holiday", mood: "seasonal", path: "/kits/holiday", label: "Holiday", title: "Holiday Diamond Painting Kits" },
   { id: "heroes", mood: "heroes", path: "/kits/heroes", label: "Heroes", title: "Heroes & Game Day Diamond Painting Kits" },
   { id: "beginner", mood: "fun", path: "/kits/beginner", label: "Beginner", title: "Beginner Diamond Painting Kits" },
+  { id: "fun", mood: "fun", path: "/kits/fun", label: "Fun", title: "Fun Diamond Painting Kits" },
+  { id: "seasonal", mood: "seasonal", path: "/kits/seasonal", label: "Seasonal", title: "Seasonal Diamond Painting Kits" },
+  { id: "tools", mood: "tools", path: "/kits/tools", label: "Tools", title: "Diamond Painting Tools" },
 ] as const;
+
+export const MOOD_PATH: Record<string, string> = {
+  all: "/kits",
+  glam: "/kits/glam",
+  wildlife: "/kits/wildlife",
+  fun: "/kits/fun",
+  seasonal: "/kits/seasonal",
+  heroes: "/kits/heroes",
+  tools: "/kits/tools",
+};
 
 export function absoluteUrl(path = "/") {
   if (path.startsWith("http")) return path;

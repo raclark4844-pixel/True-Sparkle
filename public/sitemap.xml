@@ -7,6 +7,9 @@
   <url><loc>https://www.truesparkles.com/kits/holiday</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.truesparkles.com/kits/heroes</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.truesparkles.com/kits/beginner</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.truesparkles.com/kits/fun</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.truesparkles.com/kits/seasonal</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.truesparkles.com/kits/tools</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.truesparkles.com/custom</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.truesparkles.com/how-it-works</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.truesparkles.com/about</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
