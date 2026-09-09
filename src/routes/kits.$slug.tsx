@@ -2,6 +2,7 @@ import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { Catalog } from "@/components/catalog";
 import { KitDetail } from "@/components/kit-detail";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { CategoryButtons } from "@/components/category-buttons";
 import { loadShop, loadShopItem } from "@/lib/catalog-fns";
 import { THEME_SLUGS } from "@/lib/kit-copy";
 import { PRODUCTS, type Mood } from "@/lib/products";
@@ -89,6 +90,7 @@ function KitsSlugPage() {
             Round or square drills. Made to order. Handmade tumblers and candles live at
             sister shop KayzCharmzz — this catalog is kits only.
           </p>
+          <CategoryButtons current={loaded.slug} />
         </div>
         <Catalog products={products} isAdmin={loaded.shop.isAdmin} activeMood={mood} />
       </main>

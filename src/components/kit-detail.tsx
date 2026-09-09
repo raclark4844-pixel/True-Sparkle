@@ -5,6 +5,7 @@ import { fromPrice, kitPath, leadLabel, moodLabel, relatedProducts } from "@/lib
 import { ProductCard } from "@/components/product-card";
 import { KitConfigurator } from "@/components/kit-configurator";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { CategoryButtons } from "@/components/category-buttons";
 import { JsonLd } from "@/components/json-ld";
 import { THEMES, absoluteUrl } from "@/lib/seo";
 
@@ -67,6 +68,7 @@ export function KitDetail({
         <ArrowLeft className="size-4" />
         Back to catalog
       </a>
+      <CategoryButtons current={theme?.id ?? product.mood} />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-2">
         <div className="overflow-hidden rounded-xl border border-line bg-surface">
