@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteBottomNav } from "@/components/site-bottom-nav";
 import { JsonLd } from "@/components/json-ld";
 import { getAdminStatus } from "@/lib/catalog-fns";
-import { canonicalRedirectUrl } from "@/lib/canonical-host";
+import { getCanonicalRedirect } from "@/lib/canonical-host";
 import { gaId, organizationJsonLd, pageHead, SITE_DESCRIPTION, SITE_TITLE } from "@/lib/seo";
 import appCss from "../styles.css?url";
 
@@ -14,18 +14,8 @@ export const Route = createRootRoute({
   loader: () => getAdminStatus(),
   beforeLoad: async () => {
     if (typeof window !== "undefined") return;
-    try {
-      const { getRequest } = await import("@tanstack/react-start/server");
-      const request = getRequest();
-      const forwarded = request.headers.get("x-forwarded-host");
-      const host = (forwarded || request.headers.get("host") || "").split(":")[0];
-      const proto = request.headers.get("x-forwarded-proto") || "https";
-      const path = new URL(request.url).pathname + new URL(request.url).search;
-      const dest = canonicalRedirectUrl(`${proto}://${host}${path}`);
-      if (dest) throw redirect({ href: dest });
-    } catch (err) {
-      if (err && typeof err === "object" && "href" in err) throw err;
-    }
+    const dest = await getCanonicalRedirect();
+    if (dest) throw redirect({ href: dest });
   },
   head: () => {
     const seo = pageHead({

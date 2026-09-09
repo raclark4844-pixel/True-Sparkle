@@ -1,3 +1,4 @@
+import { createServerFn } from "@tanstack/react-start";
 import { LEGACY_HOSTS, SITE_ORIGIN } from "@/lib/seo";
 
 const LOCAL = new Set(["localhost", "127.0.0.1", "0.0.0.0"]);
@@ -19,3 +20,13 @@ export function canonicalRedirectUrl(requestUrl: string): string | null {
   if (!shouldMove) return null;
   return `${SITE_ORIGIN}${url.pathname}${url.search}`;
 }
+
+export const getCanonicalRedirect = createServerFn({ method: "GET" }).handler(async () => {
+  const { getRequest } = await import("@tanstack/react-start/server");
+  const request = getRequest();
+  const forwarded = request.headers.get("x-forwarded-host");
+  const host = (forwarded || request.headers.get("host") || "").split(":")[0];
+  const proto = request.headers.get("x-forwarded-proto") || "https";
+  const url = new URL(request.url);
+  return canonicalRedirectUrl(`${proto}://${host}${url.pathname}${url.search}`);
+});
