@@ -1,6 +1,7 @@
 import type { Product } from "@/lib/products";
-import { formatUsd, fromPrice, leadLabel, moodLabel } from "@/lib/products";
+import { formatUsd, fromPrice, kitPath, leadLabel, moodLabel } from "@/lib/products";
 import { Button, CtaGroup } from "@/components/ui/button";
+import { trackEvent } from "@/lib/seo";
 
 export function ProductCard({
   product,
@@ -14,15 +15,17 @@ export function ProductCard({
   onDelete?: (product: Product) => void;
 }) {
   const start = fromPrice(product);
-  const href = `/?kit=${product.id}`;
+  const href = kitPath(product);
+  const alt = product.alt ?? `${product.name} diamond painting kit by True Sparkle`;
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-line bg-surface transition-transform duration-200 hover:-translate-y-1">
       <a href={href} className="block aspect-square overflow-hidden bg-surface-2">
         <img
           src={product.img}
-          alt={product.name}
+          alt={alt}
           className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
         />
       </a>
       <div className="flex flex-1 flex-col gap-2 p-4">
@@ -49,7 +52,18 @@ export function ProductCard({
             <a href={href}>View kit</a>
           </Button>
           <Button asChild>
-            <a href={product.buy} target="_blank" rel="noopener noreferrer">
+            <a
+              href={product.buy}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent("add_to_cart", {
+                  item_id: product.id,
+                  item_name: product.name,
+                  currency: "USD",
+                })
+              }
+            >
               Buy
             </a>
           </Button>
@@ -59,11 +73,7 @@ export function ProductCard({
             <Button type="button" variant="ghost" onClick={() => onEdit?.(product)}>
               Edit
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onDelete?.(product)}
-            >
+            <Button type="button" variant="ghost" onClick={() => onDelete?.(product)}>
               Delete
             </Button>
           </CtaGroup>

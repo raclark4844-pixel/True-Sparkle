@@ -1,3 +1,5 @@
+import { applyKitMeta } from "@/lib/kit-copy";
+
 export const STORE_URL = "https://truesprakle.my-online.store/";
 
 export type Mood =
@@ -48,6 +50,9 @@ export type Product = {
   sizes: PriceOption[];
   drills: PriceOption[];
   leadTime?: LeadTime;
+  slug?: string;
+  alt?: string;
+  story?: string;
 };
 
 export function leadLabel(product: Product) {
@@ -577,8 +582,18 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
+applyKitMeta(PRODUCTS);
+
 export function getProduct(id: string) {
-  return PRODUCTS.find((p) => p.id === id);
+  return PRODUCTS.find((p) => p.id === id || p.slug === id);
+}
+
+export function kitPath(product: Product) {
+  return `/kits/${product.slug ?? product.id}`;
+}
+
+export function getProductBySlug(slug: string) {
+  return PRODUCTS.find((p) => p.slug === slug || p.id === slug);
 }
 
 export function relatedProducts(product: Product, limit = 3, catalog?: Product[]) {

@@ -1,14 +1,12 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { KitDetail } from "@/components/kit-detail";
-import { loadShopItem } from "@/lib/catalog-fns";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { KIT_META } from "@/lib/kit-copy";
+import { PRODUCTS } from "@/lib/products";
 
 export const Route = createFileRoute("/kit/$id")({
-  loader: async ({ params }) => loadShopItem({ data: { id: params.id } }),
-  component: KitPage,
+  beforeLoad: ({ params }) => {
+    const meta = KIT_META[params.id];
+    const product = PRODUCTS.find((p) => p.id === params.id || p.slug === params.id);
+    const slug = meta?.slug ?? product?.slug ?? params.id;
+    throw redirect({ href: `/kits/${slug}` });
+  },
 });
-
-function KitPage() {
-  const { product, products, isAdmin } = Route.useLoaderData();
-  if (!product) throw notFound();
-  return <KitDetail product={product} catalog={products} isAdmin={isAdmin} />;
-}

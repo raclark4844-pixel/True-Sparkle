@@ -1,8 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { STUDIO_EMAIL, STUDIO_LOCATION } from "@/lib/studio";
+import { KAYZ_URL, PARENT_URL, SISTER_SENTENCE, STUDIO_EMAIL, STUDIO_LOCATION, pageHead } from "@/lib/seo";
 
-export const Route = createFileRoute("/about")({ component: AboutPage });
+export const Route = createFileRoute("/about")({
+  head: () =>
+    pageHead({
+      title: "About True Sparkle | Cleveland Diamond Painting Studio",
+      description:
+        "True Sparkle is a Black-owned, woman-led family studio in Cleveland that designs original diamond painting kits and custom photo-to-kit canvases.",
+      path: "/about",
+    }),
+  component: AboutPage,
+});
 
 const kitParts = [
   {
@@ -97,9 +106,15 @@ function AboutPage() {
               they are proud of.
             </p>
             <p className="mt-4 text-muted">
-              Built for families, first-time painters, and anyone who wants art
-              that looks like them. This page is the beginner blueprint we wish
-              every kit came with.
+              {SISTER_SENTENCE}{" "}
+              <a href={PARENT_URL} className="text-champagne underline decoration-champagne/60 hover:text-fg">
+                IK’s Charms & True Sparkle
+              </a>{" "}
+              is the house brand. Handmade tumblers, candles, and charms live at{" "}
+              <a href={KAYZ_URL} className="text-champagne underline decoration-champagne/60 hover:text-fg">
+                KayzCharmzz
+              </a>
+              — we do not sell those products here.
             </p>
             <p className="mt-4 text-muted">
               Turn your photo into a kit. If the picture that matters isn’t in
@@ -215,9 +230,12 @@ function AboutPage() {
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p className="font-display text-3xl">Ready for your first kit?</p>
           <Button asChild>
-            <Link to="/" hash="shop">
-              Shop kits
+            <Link to="/how-it-works">
+              Beginner guide
             </Link>
+          </Button>
+          <Button asChild variant="ghost">
+            <Link to="/kits">Shop kits</Link>
           </Button>
         </div>
       </section>

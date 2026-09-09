@@ -13,9 +13,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CustomRouteImport } from './routes/custom'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as KitsRouteImport } from './routes/kits'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ShippingAndLeadTimeRouteImport } from './routes/shipping-and-lead-time'
 import { Route as ApiCustomArtRouteImport } from './routes/api/custom-art'
 import { Route as KitIdRouteImport } from './routes/kit.$id'
+import { Route as KitsIndexRouteImport } from './routes/kits.index'
+import { Route as KitsSlugRouteImport } from './routes/kits.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,9 +42,24 @@ const CustomRoute = CustomRouteImport.update({
   path: '/custom',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KitsRoute = KitsRouteImport.update({
+  id: '/kits',
+  path: '/kits',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShippingAndLeadTimeRoute = ShippingAndLeadTimeRouteImport.update({
+  id: '/shipping-and-lead-time',
+  path: '/shipping-and-lead-time',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCustomArtRoute = ApiCustomArtRouteImport.update({
@@ -52,24 +72,43 @@ const KitIdRoute = KitIdRouteImport.update({
   path: '/kit/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KitsIndexRoute = KitsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => KitsRoute,
+} as any)
+const KitsSlugRoute = KitsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => KitsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/custom': typeof CustomRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/kits': typeof KitsRouteWithChildren
   '/login': typeof LoginRoute
+  '/shipping-and-lead-time': typeof ShippingAndLeadTimeRoute
   '/api/custom-art': typeof ApiCustomArtRoute
   '/kit/$id': typeof KitIdRoute
+  '/kits/$slug': typeof KitsSlugRoute
+  '/kits/': typeof KitsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/custom': typeof CustomRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
+  '/shipping-and-lead-time': typeof ShippingAndLeadTimeRoute
   '/api/custom-art': typeof ApiCustomArtRoute
   '/kit/$id': typeof KitIdRoute
+  '/kits/$slug': typeof KitsSlugRoute
+  '/kits': typeof KitsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,9 +116,14 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/custom': typeof CustomRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/kits': typeof KitsRouteWithChildren
   '/login': typeof LoginRoute
+  '/shipping-and-lead-time': typeof ShippingAndLeadTimeRoute
   '/api/custom-art': typeof ApiCustomArtRoute
   '/kit/$id': typeof KitIdRoute
+  '/kits/$slug': typeof KitsSlugRoute
+  '/kits/': typeof KitsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -88,27 +132,41 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/custom'
+    | '/how-it-works'
+    | '/kits'
     | '/login'
+    | '/shipping-and-lead-time'
     | '/api/custom-art'
     | '/kit/$id'
+    | '/kits/$slug'
+    | '/kits/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/contact'
     | '/custom'
+    | '/how-it-works'
     | '/login'
+    | '/shipping-and-lead-time'
     | '/api/custom-art'
     | '/kit/$id'
+    | '/kits/$slug'
+    | '/kits'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
     | '/custom'
+    | '/how-it-works'
+    | '/kits'
     | '/login'
+    | '/shipping-and-lead-time'
     | '/api/custom-art'
     | '/kit/$id'
+    | '/kits/$slug'
+    | '/kits/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -116,7 +174,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   CustomRoute: typeof CustomRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  KitsRoute: typeof KitsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ShippingAndLeadTimeRoute: typeof ShippingAndLeadTimeRoute
   ApiCustomArtRoute: typeof ApiCustomArtRoute
   KitIdRoute: typeof KitIdRoute
 }
@@ -151,11 +212,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kits': {
+      id: '/kits'
+      path: '/kits'
+      fullPath: '/kits'
+      preLoaderRoute: typeof KitsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shipping-and-lead-time': {
+      id: '/shipping-and-lead-time'
+      path: '/shipping-and-lead-time'
+      fullPath: '/shipping-and-lead-time'
+      preLoaderRoute: typeof ShippingAndLeadTimeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/custom-art': {
@@ -172,15 +254,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KitIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kits/': {
+      id: '/kits/'
+      path: '/'
+      fullPath: '/kits/'
+      preLoaderRoute: typeof KitsIndexRouteImport
+      parentRoute: typeof KitsRoute
+    }
+    '/kits/$slug': {
+      id: '/kits/$slug'
+      path: '/$slug'
+      fullPath: '/kits/$slug'
+      preLoaderRoute: typeof KitsSlugRouteImport
+      parentRoute: typeof KitsRoute
+    }
   }
 }
+
+interface KitsRouteChildren {
+  KitsSlugRoute: typeof KitsSlugRoute
+  KitsIndexRoute: typeof KitsIndexRoute
+}
+
+const KitsRouteChildren: KitsRouteChildren = {
+  KitsSlugRoute: KitsSlugRoute,
+  KitsIndexRoute: KitsIndexRoute,
+}
+
+const KitsRouteWithChildren = KitsRoute._addFileChildren(KitsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   CustomRoute: CustomRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  KitsRoute: KitsRouteWithChildren,
   LoginRoute: LoginRoute,
+  ShippingAndLeadTimeRoute: ShippingAndLeadTimeRoute,
   ApiCustomArtRoute: ApiCustomArtRoute,
   KitIdRoute: KitIdRoute,
 }

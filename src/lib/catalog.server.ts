@@ -1,3 +1,4 @@
+import { applyKitMeta } from "@/lib/kit-copy";
 import { getSql } from "@/lib/db";
 import {
   PRODUCTS,
@@ -35,7 +36,7 @@ function parseJson<T>(raw: string, fallback: T): T {
 }
 
 function fromRow(row: Row): Product {
-  return {
+  const product: Product = {
     id: row.id,
     name: row.name,
     mood: (row.mood as Mood) || "fun",
@@ -51,6 +52,8 @@ function fromRow(row: Row): Product {
     drills: parseJson<PriceOption[]>(row.drills_json, []),
     leadTime: (row.lead_time as LeadTime) || "1 month",
   };
+  applyKitMeta([product]);
+  return product;
 }
 
 async function seedIfEmpty() {
@@ -113,7 +116,7 @@ export async function getCatalogItem(id: string): Promise<Product | null> {
   } catch (err) {
     console.error("[catalog] using static kit (database unavailable)", err);
   }
-  return PRODUCTS.find((p) => p.id === id) ?? null;
+  return PRODUCTS.find((p) => p.id === id || p.slug === id) ?? null;
 }
 
 export async function upsertCatalogItem(input: {

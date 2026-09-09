@@ -1,50 +1,18 @@
-/** Contact, photo uploads, and FormSubmit all use this inbox. */
-export const STUDIO_CONTACT = "Lana Moss";
-export const STUDIO_EMAIL = "lana@ikscharmsandtwosparkles.com";
-export const STUDIO_PHONE = "216-309-0331";
-export const STUDIO_PHONE_TEL = "+12163090331";
-export const STUDIO_LOCATION = "Cleveland, Ohio";
-export const STUDIO_EST = "Est. 2021";
-export const SOCIAL_INSTAGRAM = "https://www.instagram.com/kayzcharmzz";
-export const SOCIAL_FACEBOOK = "https://www.facebook.com/kayzcharmzz";
-export const SOCIAL_TIKTOK = "https://www.tiktok.com/@mamazk40";
+export {
+  STUDIO_CONTACT,
+  STUDIO_EMAIL,
+  STUDIO_PHONE,
+  STUDIO_PHONE_TEL,
+  STUDIO_LOCATION,
+  STUDIO_EST,
+  SOCIAL_INSTAGRAM,
+  SOCIAL_FACEBOOK,
+  SOCIAL_TIKTOK,
+  PARENT_URL,
+  KAYZ_URL,
+  NAP_LINE,
+  SISTER_SENTENCE,
+  organizationJsonLd as studioJsonLd,
+} from "@/lib/seo";
 
-/** Sister-shop header/footer buttons are hidden. Set true and restore ShopLinks to unhide. */
-export const SHOW_SISTER_SHOPS = false;
-
-export const LIVE_SHOPS = [] as const;
-
-export const studioJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "True Sparkle",
-  description:
-    "Original diamond painting kits from a Black-owned, woman-led family studio in Cleveland, Ohio. Turn your photos into a kit.",
-  email: STUDIO_EMAIL,
-  telephone: STUDIO_PHONE_TEL,
-  founder: {
-    "@type": "Person",
-    name: STUDIO_CONTACT,
-    email: STUDIO_EMAIL,
-  },
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "customer service",
-    name: STUDIO_CONTACT,
-    email: STUDIO_EMAIL,
-    telephone: STUDIO_PHONE_TEL,
-    areaServed: "US",
-    availableLanguage: "English",
-  },
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Cleveland",
-    addressRegion: "OH",
-    addressCountry: "US",
-  },
-  sameAs: [SOCIAL_INSTAGRAM, SOCIAL_FACEBOOK, SOCIAL_TIKTOK],
-  parentOrganization: {
-    "@type": "Organization",
-    name: "IK's Charms & True Sparkle",
-  },
-} as const;
+export const SHOW_SISTER_SHOPS = true;

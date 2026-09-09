@@ -56,13 +56,18 @@ export const loadShopItem = createServerFn({ method: "GET" })
       const { getCatalogItem, listCatalogItems } = await import(
         "@/lib/catalog.server"
       );
-      const product = await getCatalogItem(data.id);
+      const product =
+        (await getCatalogItem(data.id)) ??
+        (await import("@/lib/products").then(({ PRODUCTS }) =>
+          PRODUCTS.find((p) => p.id === data.id || p.slug === data.id),
+        )) ??
+        null;
       const products = product ? await listCatalogItems() : [];
       return { product, products, isAdmin: isAdminRequest() };
     } catch (err) {
       console.error("[shop] falling back to static kit", err);
       const { PRODUCTS } = await import("@/lib/products");
-      const product = PRODUCTS.find((p) => p.id === data.id) ?? null;
+      const product = PRODUCTS.find((p) => p.id === data.id || p.slug === data.id) ?? null;
       return { product, products: PRODUCTS, isAdmin: isAdminRequest() };
     }
   });

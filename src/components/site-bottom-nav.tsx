@@ -4,8 +4,8 @@ import { cn } from "@/lib/cn";
 
 const tabs = [
   { id: "home", href: "/", label: "Home", icon: House },
-  { id: "shop", href: "/#shop", label: "Shop", icon: Store },
-  { id: "why", href: "/#why", label: "Why", icon: Gem },
+  { id: "shop", href: "/kits", label: "Kits", icon: Store },
+  { id: "custom", href: "/custom", label: "Custom", icon: Gem },
   { id: "about", href: "/about", label: "About", icon: BookOpen },
   { id: "contact", href: "/contact", label: "Contact", icon: Mail },
 ] as const;
@@ -16,11 +16,10 @@ function useActiveTab() {
   const hash = (location.hash || "").replace("#", "");
   const search = location.search as { kit?: string };
 
-  if (path.startsWith("/about")) return "about";
-  if (path.startsWith("/contact")) return "contact";
-  if (path === "/" && search?.kit) return "shop";
-  if (hash === "shop" || hash === "how") return "shop";
-  if (hash === "why") return "why";
+  if (path.startsWith("/about") || path.startsWith("/how-it-works")) return "about";
+  if (path.startsWith("/contact") || path.startsWith("/shipping")) return "contact";
+  if (path.startsWith("/custom")) return "custom";
+  if (path.startsWith("/kits") || path.startsWith("/kit")) return "shop";
   if (path === "/") return "home";
   return "";
 }

@@ -1,24 +1,28 @@
-import { STORE_URL } from "@/lib/products";
 import {
+  KAYZ_URL,
+  NAP_LINE,
+  PARENT_URL,
+  SISTER_SENTENCE,
   STUDIO_CONTACT,
   STUDIO_EMAIL,
   STUDIO_EST,
   STUDIO_LOCATION,
   STUDIO_PHONE,
   STUDIO_PHONE_TEL,
-} from "@/lib/studio";
+} from "@/lib/seo";
 import { SocialLinks } from "@/components/social-links";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-line py-10">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 text-sm text-muted sm:flex-row sm:items-end sm:justify-between sm:px-6">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 text-sm text-muted sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div>
           <p className="font-display text-2xl text-fg">True Sparkle</p>
           <p className="mt-1 max-w-sm">
-            Modern catalog from a Black-owned, woman-led family studio. Checkout
-            still lives on the current store until the new shop is ready.
+            Original diamond painting kits and custom photo-to-kit from a Black-owned,
+            woman-led family studio in Cleveland.
           </p>
+          <p className="mt-3 max-w-sm text-fg">{SISTER_SENTENCE}</p>
           <p className="mt-2">
             {STUDIO_LOCATION} · {STUDIO_EST}
           </p>
@@ -31,15 +35,21 @@ export function SiteFooter() {
           </a>
           <SocialLinks className="mt-3 -ml-1" />
         </div>
-        <div className="flex flex-wrap gap-x-5 gap-y-2">
-          <a href="/#shop" className="hover:text-fg">
-            Catalog
+        <div className="flex flex-col gap-2">
+          <a href="/kits" className="hover:text-fg">
+            Original diamond painting kits
+          </a>
+          <a href="/kits/beginner" className="hover:text-fg">
+            Beginner diamond painting kits
           </a>
           <a href="/custom" className="hover:text-fg">
-            Turn your photo into a kit
+            Custom photo diamond painting
           </a>
-          <a href="/#why" className="hover:text-fg">
-            Why we paint
+          <a href="/how-it-works" className="hover:text-fg">
+            How to start diamond painting
+          </a>
+          <a href="/shipping-and-lead-time" className="hover:text-fg">
+            Shipping and lead time
           </a>
           <a href="/about" className="hover:text-fg">
             About
@@ -47,11 +57,17 @@ export function SiteFooter() {
           <a href="/contact" className="hover:text-fg">
             Contact
           </a>
-          <a href={STORE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-fg">
-            Live cart
+          <a href={PARENT_URL} className="hover:text-fg">
+            Part of IK’s Charms & True Sparkle
+          </a>
+          <a href={KAYZ_URL} className="hover:text-fg">
+            Handmade gifts at KayzCharmzz
           </a>
         </div>
       </div>
+      <p className="mt-8 border-t border-line px-4 py-5 text-center text-xs text-muted">
+        {NAP_LINE}
+      </p>
     </footer>
   );
 }

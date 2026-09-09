@@ -1,9 +1,12 @@
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import type { Product } from "@/lib/products";
-import { leadLabel, moodLabel, relatedProducts } from "@/lib/products";
+import { fromPrice, kitPath, leadLabel, moodLabel, relatedProducts } from "@/lib/products";
 import { ProductCard } from "@/components/product-card";
 import { KitConfigurator } from "@/components/kit-configurator";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { JsonLd } from "@/components/json-ld";
+import { THEMES, absoluteUrl } from "@/lib/seo";
 
 export function KitDetail({
   product,
@@ -15,16 +18,51 @@ export function KitDetail({
   isAdmin?: boolean;
 }) {
   const related = relatedProducts(product, 3, catalog);
+  const theme = THEMES.find((t) => t.mood === product.mood);
+  const price = fromPrice(product);
+  const path = kitPath(product);
+  const alt = product.alt ?? `${product.name} diamond painting kit by True Sparkle`;
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [product.id]);
 
+  const productLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: absoluteUrl(product.img),
+    description: product.story ?? product.blurb,
+    brand: { "@type": "Brand", name: "True Sparkle" },
+    sku: product.id,
+    offers: {
+      "@type": "Offer",
+      url: absoluteUrl(path),
+      priceCurrency: "USD",
+      price: price != null ? price.toFixed(2) : undefined,
+      availability: "https://schema.org/MadeToOrder",
+      itemCondition: "https://schema.org/NewCondition",
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingDestination: { "@type": "DefinedRegion", addressCountry: "US" },
+      },
+    },
+  };
+
   return (
     <main className="mx-auto max-w-6xl px-4 pt-20 pb-8 sm:px-6 sm:pt-24 sm:pb-12">
+      <JsonLd data={productLd} />
+      <Breadcrumbs
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Kits", path: "/kits" },
+          ...(theme ? [{ name: theme.label, path: theme.path }] : []),
+          { name: product.name, path },
+        ]}
+      />
       <a
-        href="/#shop"
-        className="inline-flex min-h-11 items-center gap-2 text-sm text-muted hover:text-fg"
+        href="/kits"
+        className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm text-muted hover:text-fg"
       >
         <ArrowLeft className="size-4" />
         Back to catalog
@@ -34,8 +72,10 @@ export function KitDetail({
         <div className="overflow-hidden rounded-xl border border-line bg-surface">
           <img
             src={product.img}
-            alt={product.name}
+            alt={alt}
             className="aspect-square w-full object-cover"
+            width={800}
+            height={800}
           />
         </div>
         <div>
@@ -48,6 +88,9 @@ export function KitDetail({
           <p className="mt-3 text-muted">{product.size}</p>
           <p className="mt-1 text-sm text-champagne">{leadLabel(product)} lead</p>
           <p className="mt-6 text-lg text-cream/90">{product.blurb}</p>
+          {product.story ? (
+            <p className="mt-4 text-sm leading-relaxed text-muted">{product.story}</p>
+          ) : null}
           <div className="mt-6 rounded-xl border border-line bg-surface p-4">
             <p className="text-xs uppercase tracking-[0.16em] text-champagne">
               In the kit

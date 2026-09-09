@@ -4,6 +4,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SocialLinks } from "@/components/social-links";
 import { sendContactMail } from "@/lib/custom-art-mail";
+import { pageHead } from "@/lib/seo";
 import {
   STUDIO_CONTACT,
   STUDIO_EMAIL,
@@ -13,7 +14,16 @@ import {
   STUDIO_PHONE_TEL,
 } from "@/lib/studio";
 
-export const Route = createFileRoute("/contact")({ component: ContactPage });
+export const Route = createFileRoute("/contact")({
+  head: () =>
+    pageHead({
+      title: "Contact True Sparkle | Cleveland Studio",
+      description:
+        "Email Lana Moss about original diamond painting kits, custom photo-to-kit, shipping, or pickup in Cleveland, Ohio.",
+      path: "/contact",
+    }),
+  component: ContactPage,
+});
 
 const TOPICS = [
   "Order question",

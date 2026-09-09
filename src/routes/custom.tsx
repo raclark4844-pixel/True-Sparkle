@@ -2,9 +2,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FormEvent, useEffect, useState } from "react";
 import { ImagePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { JsonLd } from "@/components/json-ld";
 import { STUDIO_EMAIL } from "@/lib/studio";
+import { pageHead, trackEvent } from "@/lib/seo";
 
-export const Route = createFileRoute("/custom")({ component: CustomPage });
+export const Route = createFileRoute("/custom")({
+  head: () =>
+    pageHead({
+      title: "Custom Photo Diamond Painting | True Sparkle",
+      description:
+        "Turn a photo into a diamond painting kit. Sizes, round or square drills, lead time, and which pictures work — charted in Cleveland.",
+      path: "/custom",
+    }),
+  component: CustomPage,
+});
 
 const fieldClass =
   "mt-2 min-h-11 w-full rounded-full border border-line bg-surface px-4 text-sm text-fg outline-none placeholder:text-muted focus:border-champagne";
@@ -68,6 +79,7 @@ function CustomPage() {
         setSent(true);
         setFiles([]);
         form.reset();
+        trackEvent("generate_lead", { form: "custom-kit" });
         return;
       }
       if (payload.retryClient) {
@@ -83,6 +95,7 @@ function CustomPage() {
         setSent(true);
         setFiles([]);
         form.reset();
+        trackEvent("generate_lead", { form: "custom-kit" });
         return;
       }
       setError(payload.error || "Could not send. Try again.");
@@ -95,6 +108,17 @@ function CustomPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-20">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: "Custom photo diamond painting kit",
+          provider: { "@type": "Organization", name: "True Sparkle" },
+          areaServed: "US",
+          description:
+            "Turn a personal photo into a made-to-order diamond painting kit with size and drill options, charted in Cleveland, Ohio.",
+        }}
+      />
       <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-start">
         <div>
           <p className="text-xs uppercase tracking-[0.28em] text-champagne">
@@ -104,10 +128,14 @@ function CustomPage() {
             Send a photo. We make the kit.
           </h1>
           <p className="mt-5 text-muted">
-            Portrait, pet, family, or a picture you love — upload it here. The
-            studio gets the files by email at {STUDIO_EMAIL} and writes you
-            back with size, drills, and a price.
+            Portrait, pet, wedding, or game-day shot — upload it here. True Sparkle
+            charts a custom layout: size, round or square drills, and a price range
+            after we see the photo. Sharp daylight photos work. Tiny faces, heavy
+            filters, and screenshots usually do not. Lead time follows the studio
+            queue (typically about a month after we confirm). Handmade tumblers and
+            jewelry are at sister shop KayzCharmzz — this page is kits only.
           </p>
+          <h2 className="mt-8 font-display text-2xl">What photos work</h2>
           <ul className="mt-6 space-y-2 text-sm text-muted">
             <li>Up to 5 photos, 8 MB each.</li>
             <li>Clear, well-lit pictures work best.</li>

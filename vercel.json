@@ -1,10 +1,32 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "truesparkles.com" }],
+      "destination": "https://www.truesparkles.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "true-sparkle.vercel.app" }],
+      "destination": "https://www.truesparkles.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "aurora-brook-zest-cosmic.grok.me" }],
+      "destination": "https://www.truesparkles.com/:path*",
+      "permanent": true
+    },
+    { "source": "/kit/:id", "destination": "/kits/:id", "permanent": true },
+    { "source": "/product/:slug", "destination": "/kits/:slug", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
       ]
     }
   ]
