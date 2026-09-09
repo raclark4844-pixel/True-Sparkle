@@ -1,9 +1,19 @@
-import { Facebook, Youtube } from "lucide-react";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 export const SOCIALS = [
   {
-    href: "https://www.tiktok.com/@mamazk40",
+    href: "https://www.instagram.com/kayzcharmzz",
+    label: "Instagram",
+    icon: Instagram,
+  },
+  {
+    href: "https://www.facebook.com/kayzcharmzz",
+    label: "Facebook",
+    icon: Facebook,
+  },
+  {
+    href: "https://www.tiktok.com/@mamk40",
     label: "TikTok",
     icon: TikTokIcon,
   },
@@ -11,11 +21,6 @@ export const SOCIALS = [
     href: "https://www.youtube.com/@kaythecreator-zc7dl",
     label: "YouTube",
     icon: Youtube,
-  },
-  {
-    href: "https://www.facebook.com/share/1Dg1eV5cMW/",
-    label: "Facebook",
-    icon: Facebook,
   },
 ] as const;
 

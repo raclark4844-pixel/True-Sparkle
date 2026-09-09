@@ -1,8 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FormEvent, useState } from "react";
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { STUDIO_EMAIL, STUDIO_LOCATION } from "@/lib/studio";
+import { SocialLinks } from "@/components/social-links";
+import {
+  STUDIO_EMAIL,
+  STUDIO_EST,
+  STUDIO_LOCATION,
+  STUDIO_PHONE,
+  STUDIO_PHONE_TEL,
+} from "@/lib/studio";
 
 export const Route = createFileRoute("/contact")({ component: ContactPage });
 
@@ -90,10 +97,24 @@ function ContactPage() {
             <Mail className="size-5 text-primary" aria-hidden />
             {STUDIO_EMAIL}
           </a>
+          <a
+            href={`tel:${STUDIO_PHONE_TEL}`}
+            className="flex min-h-11 items-center gap-3 text-fg hover:text-champagne"
+          >
+            <Phone className="size-5 text-primary" aria-hidden />
+            {STUDIO_PHONE}
+          </a>
           <p className="flex min-h-11 items-center gap-3 text-fg">
             <MapPin className="size-5 text-primary" aria-hidden />
-            {STUDIO_LOCATION}
+            {STUDIO_LOCATION} · {STUDIO_EST}
           </p>
+          <p className="mt-4 text-xs uppercase tracking-[0.16em] text-champagne">
+            Follow
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            Instagram & Facebook @kayzcharmzz · TikTok @mamk40
+          </p>
+          <SocialLinks className="mt-1 -ml-1" />
           <p className="mt-6 max-w-sm text-sm text-muted">
             If you already checked out on the live cart, include the order
             number or kit name so we can find you faster.
