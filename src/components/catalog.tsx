@@ -2,12 +2,12 @@ import { useMemo, useState } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { MOODS, type Mood, type Product } from "@/lib/products";
+import { STUDIO_EMAIL } from "@/lib/studio";
 import { ProductCard } from "./product-card";
 import { Button } from "@/components/ui/button";
 import { ItemEditor } from "@/components/item-editor";
 import { deleteShopItem } from "@/lib/catalog-fns";
 import { cn } from "@/lib/cn";
-import { STUDIO_EMAIL } from "@/lib/studio";
 
 export function Catalog({
   products,
