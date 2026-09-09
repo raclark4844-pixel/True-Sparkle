@@ -1,5 +1,6 @@
 import { STORE_URL } from "@/lib/products";
 import {
+  STUDIO_CONTACT,
   STUDIO_EMAIL,
   STUDIO_EST,
   STUDIO_LOCATION,
@@ -21,6 +22,7 @@ export function SiteFooter() {
           <p className="mt-2">
             {STUDIO_LOCATION} · {STUDIO_EST}
           </p>
+          <p className="mt-2 text-fg">{STUDIO_CONTACT}</p>
           <a href={`mailto:${STUDIO_EMAIL}`} className="mt-1 block hover:text-fg">
             {STUDIO_EMAIL}
           </a>

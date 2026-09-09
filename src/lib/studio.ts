@@ -1,4 +1,5 @@
 /** Contact, photo uploads, and FormSubmit all use this inbox. */
+export const STUDIO_CONTACT = "Lana Moss";
 export const STUDIO_EMAIL = "lana@ikscharmsandtwosparkles.com";
 export const STUDIO_PHONE = "216-309-0331";
 export const STUDIO_PHONE_TEL = "+12163090331";
@@ -21,6 +22,12 @@ export const studioJsonLd = {
     "Original diamond painting kits from a Black-owned, woman-led family studio in Cleveland, Ohio. Turn your photos into a kit.",
   email: STUDIO_EMAIL,
   telephone: STUDIO_PHONE_TEL,
+  employee: {
+    "@type": "Person",
+    name: STUDIO_CONTACT,
+    email: STUDIO_EMAIL,
+    jobTitle: "Contact",
+  },
   address: {
     "@type": "PostalAddress",
     addressLocality: "Cleveland",

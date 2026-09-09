@@ -4,6 +4,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SocialLinks } from "@/components/social-links";
 import {
+  STUDIO_CONTACT,
   STUDIO_EMAIL,
   STUDIO_EST,
   STUDIO_LOCATION,
@@ -79,20 +80,22 @@ function ContactPage() {
             Contact
           </p>
           <h1 className="mt-3 font-display text-5xl leading-tight sm:text-6xl">
-            Write the studio.
+            Write Lana Moss.
           </h1>
           <p className="mt-5 text-muted">
             Questions about a kit, an order on the current store, or a custom
-            piece — send a note. We are a family studio in {STUDIO_LOCATION}.
-            We read every message. For a kit from your own photo, use{" "}
+            piece — send a note to {STUDIO_CONTACT}. We are a family studio in{" "}
+            {STUDIO_LOCATION}. We read every message. For a kit from your own
+            photo, use{" "}
             <a href="/custom" className="text-fg underline decoration-champagne">
               custom art
             </a>
             .
           </p>
+          <p className="mt-8 font-display text-3xl text-fg">{STUDIO_CONTACT}</p>
           <a
             href={`mailto:${STUDIO_EMAIL}`}
-            className="mt-8 flex min-h-11 items-center gap-3 text-fg hover:text-champagne"
+            className="mt-3 flex min-h-11 items-center gap-3 text-fg hover:text-champagne"
           >
             <Mail className="size-5 text-primary" aria-hidden />
             {STUDIO_EMAIL}
