@@ -1,7 +1,7 @@
 import { useRouterState } from "@tanstack/react-router";
-import { ArrowUpRight, BookOpen, Gem, House, Mail, Store } from "lucide-react";
+import { BookOpen, Gem, House, Landmark, Mail, Sparkles, Store } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { LIVE_SHOPS, SHOW_SISTER_SHOPS } from "@/lib/studio";
+import { KAYZ_URL, PARENT_URL, SHOW_SISTER_SHOPS } from "@/lib/studio";
 
 const tabs = [
   { id: "home", href: "/", label: "Home", icon: House },
@@ -9,6 +9,22 @@ const tabs = [
   { id: "custom", href: "/custom", label: "Custom", icon: Gem },
   { id: "about", href: "/about", label: "About", icon: BookOpen },
   { id: "contact", href: "/contact", label: "Contact", icon: Mail },
+  {
+    id: "kayz",
+    href: KAYZ_URL,
+    label: "Kayz",
+    icon: Sparkles,
+    external: true,
+    ariaLabel: "KayzCharmzz handmade gifts",
+  },
+  {
+    id: "parent",
+    href: PARENT_URL,
+    label: "Parent",
+    icon: Landmark,
+    external: true,
+    ariaLabel: "IK’s Charms & True Sparkle",
+  },
 ] as const;
 
 function useActiveTab() {
@@ -25,37 +41,26 @@ function useActiveTab() {
 
 export function SiteBottomNav() {
   const active = useActiveTab();
+  const items = SHOW_SISTER_SHOPS ? tabs : tabs.filter((tab) => !("external" in tab && tab.external));
 
   return (
     <nav
       aria-label="Primary"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
     >
-      {SHOW_SISTER_SHOPS ? (
-        <div className="grid grid-cols-2 gap-2 border-b border-line px-3 py-2">
-          {LIVE_SHOPS.map((shop) => (
-            <a
-              key={shop.href}
-              href={shop.href}
-              rel="noopener"
-              className="inline-flex h-9 items-center justify-center gap-1 rounded-full border border-champagne/45 px-2 text-[0.65rem] font-medium uppercase tracking-[0.12em] text-champagne hover:border-champagne hover:text-cream"
-            >
-              <span className="truncate">{shop.name}</span>
-              <ArrowUpRight className="size-3 shrink-0" aria-hidden />
-            </a>
-          ))}
-        </div>
-      ) : null}
-      <ul className="mx-auto grid max-w-6xl grid-cols-5">
-        {tabs.map((tab) => {
+      <ul className={cn("mx-auto grid max-w-6xl", items.length === 7 ? "grid-cols-7" : "grid-cols-5")}>
+        {items.map((tab) => {
           const Icon = tab.icon;
           const isActive = active === tab.id;
+          const external = "external" in tab && tab.external;
           return (
             <li key={tab.id}>
               <a
                 href={tab.href}
+                rel={external ? "noopener" : undefined}
+                aria-label={"ariaLabel" in tab ? tab.ariaLabel : undefined}
                 className={cn(
-                  "flex h-14 flex-col items-center justify-center gap-0.5 text-[0.65rem] tracking-wide transition-colors",
+                  "flex h-14 flex-col items-center justify-center gap-0.5 px-0.5 text-center text-[0.6rem] tracking-wide transition-colors",
                   isActive ? "text-primary" : "text-muted hover:text-fg",
                 )}
                 aria-current={isActive ? "page" : undefined}

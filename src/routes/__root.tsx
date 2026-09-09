@@ -65,7 +65,7 @@ function RootComponent() {
         <HeadContent />
         <JsonLd data={organizationJsonLd} />
       </head>
-      <body className="min-h-dvh bg-bg text-fg antialiased pb-[calc(7rem+env(safe-area-inset-bottom))]">
+      <body className="min-h-dvh bg-bg text-fg antialiased pb-[calc(3.5rem+env(safe-area-inset-bottom))]">
         <PreviewHostBridge />
         <AuthProvider>
           <SiteHeader isAdmin={isAdmin} />
