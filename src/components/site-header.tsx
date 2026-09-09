@@ -1,6 +1,7 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
+import { ShopLinks } from "@/components/shop-links";
 import { adminLogout } from "@/lib/catalog-fns";
 import { KAYZ_URL, PARENT_URL } from "@/lib/seo";
 
@@ -39,6 +40,8 @@ export function SiteHeader({ isAdmin = false }: { isAdmin?: boolean }) {
           </a>
         </nav>
         <div className="flex min-w-0 shrink-0 items-center gap-1 sm:gap-2">
+          <ShopLinks size="xs" className="sm:hidden" />
+          <ShopLinks size="sm" className="hidden sm:flex" />
           {isAdmin ? (
             <Button
               type="button"

@@ -11,6 +11,7 @@ import {
   STUDIO_PHONE_TEL,
 } from "@/lib/seo";
 import { SocialLinks } from "@/components/social-links";
+import { ShopLinks } from "@/components/shop-links";
 
 export function SiteFooter() {
   return (
@@ -33,6 +34,10 @@ export function SiteFooter() {
           <a href={`tel:${STUDIO_PHONE_TEL}`} className="mt-1 block hover:text-fg">
             {STUDIO_PHONE}
           </a>
+          <p className="mt-4 text-xs uppercase tracking-[0.16em] text-champagne">
+            Sister shops
+          </p>
+          <ShopLinks className="mt-2" />
           <SocialLinks className="mt-3 -ml-1" />
         </div>
         <div className="flex flex-col gap-2">
