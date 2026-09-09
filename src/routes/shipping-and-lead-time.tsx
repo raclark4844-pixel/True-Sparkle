@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { pageHead } from "@/lib/seo";
+import { pageHead, STUDIO_ADDRESS } from "@/lib/seo";
 
 export const Route = createFileRoute("/shipping-and-lead-time")({
   head: () =>
@@ -46,7 +46,7 @@ function ShippingPage() {
         <h2 className="font-display text-3xl">Shipping</h2>
         <p className="mt-4 text-muted">
           We ship inside the United States. Tracking goes to the email on the order.
-          Cleveland pickup can be arranged through{" "}
+          Local pickup at {STUDIO_ADDRESS} can be arranged through{" "}
           <Link to="/contact" className="text-champagne underline">
             contact
           </Link>{" "}

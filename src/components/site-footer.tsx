@@ -7,6 +7,7 @@ import {
   STUDIO_EMAIL,
   STUDIO_EST,
   STUDIO_LOCATION,
+  STUDIO_ADDRESS,
   STUDIO_PHONE,
   STUDIO_PHONE_TEL,
 } from "@/lib/seo";
@@ -25,6 +26,9 @@ export function SiteFooter() {
           </p>
           <p className="mt-3 max-w-sm text-fg">{SISTER_SENTENCE}</p>
           <p className="mt-2">
+            {STUDIO_ADDRESS}
+          </p>
+          <p className="mt-1">
             {STUDIO_LOCATION} · {STUDIO_EST}
           </p>
           <p className="mt-2 text-fg">{STUDIO_CONTACT}</p>

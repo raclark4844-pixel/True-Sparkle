@@ -10,6 +10,8 @@ import {
   STUDIO_EMAIL,
   STUDIO_EST,
   STUDIO_LOCATION,
+  STUDIO_ADDRESS,
+  STUDIO_ADDRESS_LINES,
   STUDIO_PHONE,
   STUDIO_PHONE_TEL,
 } from "@/lib/studio";
@@ -17,9 +19,9 @@ import {
 export const Route = createFileRoute("/contact")({
   head: () =>
     pageHead({
-      title: "Contact True Sparkle | Cleveland Studio",
+      title: "Contact True Sparkle | Avon, Ohio",
       description:
-        "Email Lana Moss about original diamond painting kits, custom photo-to-kit, shipping, or pickup in Cleveland, Ohio.",
+        `Email Lana Moss about original diamond painting kits, custom photo-to-kit, shipping, or pickup at ${STUDIO_ADDRESS}.`,
       path: "/contact",
     }),
   component: ContactPage,
@@ -128,9 +130,16 @@ function ContactPage() {
             <Phone className="size-5 text-primary" aria-hidden />
             {STUDIO_PHONE}
           </a>
-          <p className="flex min-h-11 items-center gap-3 text-fg">
-            <MapPin className="size-5 text-primary" aria-hidden />
-            {STUDIO_LOCATION} · {STUDIO_EST}
+          <p className="flex min-h-11 items-start gap-3 text-fg">
+            <MapPin className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
+            <span>
+              {STUDIO_ADDRESS_LINES[0]}
+              <br />
+              {STUDIO_ADDRESS_LINES[1]}
+              <br />
+              {STUDIO_ADDRESS_LINES[2]}
+              <span className="mt-1 block text-sm text-muted">{STUDIO_EST} · Pickup by appointment</span>
+            </span>
           </p>
           <p className="mt-4 text-xs uppercase tracking-[0.16em] text-champagne">
             Follow
