@@ -5,6 +5,9 @@ import {
   STUDIO_LOCATION,
   STUDIO_PHONE,
   STUDIO_PHONE_TEL,
+  SOCIAL_FACEBOOK,
+  SOCIAL_INSTAGRAM,
+  SOCIAL_TIKTOK,
 } from "@/lib/studio";
 import { SocialLinks } from "@/components/social-links";
 
@@ -27,6 +30,19 @@ export function SiteFooter() {
           <a href={`tel:${STUDIO_PHONE_TEL}`} className="mt-1 block hover:text-fg">
             {STUDIO_PHONE}
           </a>
+          <p className="mt-2">
+            <a href={SOCIAL_INSTAGRAM} target="_blank" rel="noopener noreferrer" className="hover:text-fg">
+              Instagram
+            </a>
+            {" & "}
+            <a href={SOCIAL_FACEBOOK} target="_blank" rel="noopener noreferrer" className="hover:text-fg">
+              Facebook
+            </a>{" "}
+            @kayzcharmzz ·{" "}
+            <a href={SOCIAL_TIKTOK} target="_blank" rel="noopener noreferrer" className="hover:text-fg">
+              TikTok @mamk40
+            </a>
+          </p>
           <SocialLinks className="mt-3 -ml-1" />
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2">

@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteBottomNav } from "@/components/site-bottom-nav";
 import { getAdminStatus } from "@/lib/catalog-fns";
+import { studioJsonLd } from "@/lib/studio";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "True Sparkle";
@@ -45,6 +46,10 @@ function RootComponent() {
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(studioJsonLd) }}
+        />
       </head>
       <body className="min-h-dvh bg-bg text-fg antialiased pb-[calc(3.5rem+env(safe-area-inset-bottom))]">
         <PreviewHostBridge />
