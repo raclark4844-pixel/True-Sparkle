@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ItemEditor } from "@/components/item-editor";
 import { deleteShopItem } from "@/lib/catalog-fns";
 import { cn } from "@/lib/cn";
+import { STUDIO_EMAIL } from "@/lib/studio";
 
 export function Catalog({
   products,
@@ -80,8 +81,14 @@ export function Catalog({
               Turn your photo into a kit.
             </h3>
             <p className="mt-3 text-sm text-muted">
-              Upload a portrait, pet, or family picture. It emails straight to
-              the studio — we send back size, drills, and a price.
+              Upload a portrait, pet, or family picture. It emails straight to{" "}
+              <a
+                href={`mailto:${STUDIO_EMAIL}`}
+                className="text-champagne underline decoration-champagne/60 hover:text-fg"
+              >
+                {STUDIO_EMAIL}
+              </a>{" "}
+              — we send back size, drills, and a price.
             </p>
             <div className="mt-5">
               <Button asChild>

@@ -1,5 +1,5 @@
 import { STORE_URL } from "@/lib/products";
-import { STUDIO_LOCATION } from "@/lib/studio";
+import { STUDIO_EMAIL, STUDIO_LOCATION } from "@/lib/studio";
 import { SocialLinks } from "@/components/social-links";
 
 export function SiteFooter() {
@@ -13,6 +13,14 @@ export function SiteFooter() {
             still lives on the current store until the new shop is ready.
           </p>
           <p className="mt-2">{STUDIO_LOCATION}</p>
+          <p className="mt-2">
+            <a
+              href={`mailto:${STUDIO_EMAIL}`}
+              className="hover:text-fg"
+            >
+              {STUDIO_EMAIL}
+            </a>
+          </p>
           <SocialLinks className="mt-3 -ml-1" />
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2">
