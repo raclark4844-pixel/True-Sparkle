@@ -1,3 +1,4 @@
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { applyKitMeta } from "@/lib/kit-copy";
 import { getSql } from "@/lib/db";
 import {
@@ -56,6 +57,95 @@ function fromRow(row: Row): Product {
   return product;
 }
 
+function serverlessFileCatalog() {
+  return Boolean(
+    process.env.VERCEL ||
+      process.env.AWS_LAMBDA_FUNCTION_NAME ||
+      process.env.LAMBDA_TASK_ROOT,
+  ) && !(process.env.DATABASE_URL && process.env.DATABASE_URL.trim());
+}
+
+function isPgliteFsError(err: unknown) {
+  const msg = err instanceof Error ? `${err.message} ${err.stack ?? ""}` : String(err);
+  return /ENOENT|pglite\.data|EROFS|read-only file system|_libs\/pglite/i.test(msg);
+}
+
+type Overlay = { items: Product[]; deleted: string[] };
+const OVERLAY_PATH = "/tmp/true-sparkle-catalog.json";
+
+function readOverlay(): Overlay {
+  try {
+    const raw = JSON.parse(readFileSync(OVERLAY_PATH, "utf8")) as Overlay;
+    return {
+      items: Array.isArray(raw.items) ? raw.items : [],
+      deleted: Array.isArray(raw.deleted) ? raw.deleted : [],
+    };
+  } catch {
+    return { items: [], deleted: [] };
+  }
+}
+
+function writeOverlay(overlay: Overlay) {
+  mkdirSync("/tmp", { recursive: true });
+  writeFileSync(OVERLAY_PATH, JSON.stringify(overlay));
+}
+
+function mergedStatic(): Product[] {
+  const overlay = readOverlay();
+  const byId = new Map<string, Product>();
+  for (const p of PRODUCTS) {
+    if (!overlay.deleted.includes(p.id)) byId.set(p.id, p);
+  }
+  for (const p of overlay.items) {
+    if (!overlay.deleted.includes(p.id)) {
+      applyKitMeta([p]);
+      byId.set(p.id, p);
+    }
+  }
+  return [...byId.values()];
+}
+
+function buildProduct(input: {
+  id: string;
+  name: string;
+  blurb: string;
+  price: string | null;
+  img: string;
+  leadTime: LeadTime;
+  mood?: Mood;
+  buy?: string;
+  sizes: PriceOption[];
+  drills: PriceOption[];
+  sizeLabel: string;
+  kit: string;
+}): Product {
+  const product: Product = {
+    id: input.id,
+    name: input.name,
+    mood: input.mood || "fun",
+    size: input.sizeLabel,
+    img: input.img,
+    buy: input.buy || STORE_URL,
+    blurb: input.blurb,
+    kit: input.kit,
+    price: input.price || undefined,
+    featured: false,
+    sizes: input.sizes,
+    drills: input.drills,
+    leadTime: input.leadTime,
+  };
+  applyKitMeta([product]);
+  return product;
+}
+
+function saveOverlayItem(product: Product) {
+  const overlay = readOverlay();
+  overlay.deleted = overlay.deleted.filter((id) => id !== product.id);
+  overlay.items = overlay.items.filter((p) => p.id !== product.id);
+  overlay.items.push(product);
+  writeOverlay(overlay);
+}
+
 async function seedIfEmpty() {
   const sql = await getSql();
   const count = await sql.query<{ n: number }>(
@@ -91,6 +181,7 @@ async function seedIfEmpty() {
 }
 
 export async function listCatalogItems(): Promise<Product[]> {
+  if (serverlessFileCatalog()) return mergedStatic();
   try {
     await seedIfEmpty();
     const sql = await getSql();
@@ -100,11 +191,16 @@ export async function listCatalogItems(): Promise<Product[]> {
     return rows.length ? rows.map(fromRow) : PRODUCTS;
   } catch (err) {
     console.error("[catalog] using static kits (database unavailable)", err);
-    return PRODUCTS;
+    return mergedStatic();
   }
 }
 
 export async function getCatalogItem(id: string): Promise<Product | null> {
+  if (serverlessFileCatalog()) {
+    return (
+      mergedStatic().find((p) => p.id === id || p.slug === id) ?? null
+    );
+  }
   try {
     await seedIfEmpty();
     const sql = await getSql();
@@ -116,7 +212,42 @@ export async function getCatalogItem(id: string): Promise<Product | null> {
   } catch (err) {
     console.error("[catalog] using static kit (database unavailable)", err);
   }
-  return PRODUCTS.find((p) => p.id === id || p.slug === id) ?? null;
+  return mergedStatic().find((p) => p.id === id || p.slug === id) ?? null;
+}
+
+function prepared(input: {
+  id?: string;
+  name: string;
+  blurb: string;
+  price: string;
+  img: string;
+  leadTime: LeadTime;
+  mood?: Mood;
+  buy?: string;
+  sizes: PriceOption[];
+  drills: PriceOption[];
+}) {
+  const name = input.name.trim();
+  const id =
+    input.id?.trim() ||
+    name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") ||
+    `kit-${Date.now()}`;
+  const sizes = input.sizes ?? [];
+  const drills = input.drills ?? [];
+  const sizeLabel =
+    sizes.length === 0
+      ? ""
+      : sizes.length === 1
+        ? sizes[0].label
+        : `${sizes[0].label.replace(/ cm$/, "")} to ${sizes[sizes.length - 1].label}`;
+  const price = sizes.length ? null : input.price.trim() || null;
+  const kit = sizes.length
+    ? "Pre-printed adhesive canvas, round or square drills, pen, wax, tray, organizer bags."
+    : "As shown.";
+  return { name, id, sizes, drills, sizeLabel, price, kit };
 }
 
 export async function upsertCatalogItem(input: {
@@ -131,90 +262,117 @@ export async function upsertCatalogItem(input: {
   sizes: PriceOption[];
   drills: PriceOption[];
 }): Promise<Product> {
-  const sql = await getSql();
-  await seedIfEmpty();
-  const name = input.name.trim();
-  const id =
-    input.id?.trim() ||
-    name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "") ||
-    `kit-${Date.now()}`;
+  const { name, id, sizes, drills, sizeLabel, price, kit } = prepared(input);
 
-  const sizes = input.sizes ?? [];
-  const drills = input.drills ?? [];
-  const sizeLabel =
-    sizes.length === 0
-      ? ""
-      : sizes.length === 1
-        ? sizes[0].label
-        : `${sizes[0].label.replace(/ cm$/, "")} to ${sizes[sizes.length - 1].label}`;
-  const price = sizes.length ? null : input.price.trim() || null;
-  const kit = sizes.length
-    ? "Pre-printed adhesive canvas, round or square drills, pen, wax, tray, organizer bags."
-    : "As shown.";
+  const writeLocal = async () => {
+    const existing = mergedStatic().find((p) => p.id === id);
+    let finalId = id;
+    if (existing && !input.id) finalId = `${id}-${Date.now().toString().slice(-4)}`;
+    const product = buildProduct({
+      id: finalId,
+      name,
+      blurb: input.blurb.trim(),
+      price,
+      img: input.img,
+      leadTime: input.leadTime,
+      mood: input.mood || existing?.mood,
+      buy: input.buy || existing?.buy,
+      sizes,
+      drills,
+      sizeLabel,
+      kit,
+    });
+    saveOverlayItem(product);
+    return product;
+  };
 
-  const existing = await getCatalogItem(id);
-  if (existing && input.id) {
+  if (serverlessFileCatalog()) return writeLocal();
+
+  try {
+    const sql = await getSql();
+    await seedIfEmpty();
+    const existing = await getCatalogItem(id);
+    if (existing && input.id) {
+      await sql.query(
+        `update catalog_items
+           set name = $2,
+               blurb = $3,
+               price = $4,
+               img = $5,
+               lead_time = $6,
+               sizes_json = $7,
+               drills_json = $8,
+               size_label = $9,
+               buy = coalesce(nullif($10, ''), buy)
+         where id = $1`,
+        [
+          id,
+          name,
+          input.blurb.trim(),
+          price,
+          input.img,
+          input.leadTime,
+          JSON.stringify(sizes),
+          JSON.stringify(drills),
+          sizeLabel,
+          input.buy ?? "",
+        ],
+      );
+      const updated = await getCatalogItem(id);
+      if (!updated) throw new Error("Could not save the kit.");
+      return updated;
+    }
+
+    let finalId = id;
+    if (existing) finalId = `${id}-${Date.now().toString().slice(-4)}`;
     await sql.query(
-      `update catalog_items
-         set name = $2,
-             blurb = $3,
-             price = $4,
-             img = $5,
-             lead_time = $6,
-             sizes_json = $7,
-             drills_json = $8,
-             size_label = $9,
-             buy = coalesce(nullif($10, ''), buy)
-       where id = $1`,
+      `insert into catalog_items
+        (id, name, mood, size_label, img, buy, blurb, kit, price, featured, sizes_json, drills_json, lead_time, sort_order)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,false,$10,$11,$12,$13)`,
       [
-        id,
+        finalId,
         name,
-        input.blurb.trim(),
-        price,
+        input.mood || "fun",
+        sizeLabel,
         input.img,
-        input.leadTime,
+        input.buy || STORE_URL,
+        input.blurb.trim(),
+        kit,
+        price,
         JSON.stringify(sizes),
         JSON.stringify(drills),
-        sizeLabel,
-        input.buy ?? "",
+        input.leadTime,
+        999,
       ],
     );
-    const updated = await getCatalogItem(id);
-    if (!updated) throw new Error("Could not save the kit.");
-    return updated;
+    const created = await getCatalogItem(finalId);
+    if (!created) throw new Error("Could not add the kit.");
+    return created;
+  } catch (err) {
+    if (!isPgliteFsError(err) && !serverlessFileCatalog()) throw err;
+    console.error("[catalog] saving to /tmp overlay (PGlite unavailable)", err);
+    return writeLocal();
   }
-
-  let finalId = id;
-  if (existing) finalId = `${id}-${Date.now().toString().slice(-4)}`;
-  await sql.query(
-    `insert into catalog_items
-      (id, name, mood, size_label, img, buy, blurb, kit, price, featured, sizes_json, drills_json, lead_time, sort_order)
-     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,false,$10,$11,$12,$13)`,
-    [
-      finalId,
-      name,
-      input.mood || "fun",
-      sizeLabel,
-      input.img,
-      input.buy || STORE_URL,
-      input.blurb.trim(),
-      kit,
-      price,
-      JSON.stringify(sizes),
-      JSON.stringify(drills),
-      input.leadTime,
-      999,
-    ],
-  );
-  const created = await getCatalogItem(finalId);
-  if (!created) throw new Error("Could not add the kit.");
-  return created;
 }
 
 export async function deleteCatalogItem(id: string) {
-  const sql = await getSql();
-  await sql.query("delete from catalog_items where id = $1", [id]);
+  const dropLocal = () => {
+    const overlay = readOverlay();
+    overlay.items = overlay.items.filter((p) => p.id !== id);
+    if (!overlay.deleted.includes(id)) overlay.deleted.push(id);
+    writeOverlay(overlay);
+  };
+
+  if (serverlessFileCatalog()) {
+    dropLocal();
+    return;
+  }
+
+  try {
+    const sql = await getSql();
+    await sql.query("delete from catalog_items where id = $1", [id]);
+  } catch (err) {
+    if (!isPgliteFsError(err)) throw err;
+    dropLocal();
+  }
 }
